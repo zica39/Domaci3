@@ -16,7 +16,7 @@ const Form = () => {
     const onSave = () => {
 
         if(!title){
-            alert('Title filed is required!');
+            alert('Title field is required!');
             return false;
         }
 
