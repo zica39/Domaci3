@@ -48,12 +48,14 @@ const Books = () => {
                 setBooksCount(res.data);
                 setLoading(false);
             }).catch(error=>{
-                alert(error?.message)
+                alert(error?.message);
+                setLoading(false);
             });
 
 
         }).catch(function (error) {
             alert(error?.message);
+            setLoading(false);
         });
     },[page,filter]);
 
