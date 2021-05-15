@@ -19,9 +19,9 @@ const NavbarTop = () => {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="mr-auto">
-                <Nav.Link><Link className={(data.path==='/movies' || data.path==='/movies/form')?'':'text-light'} to="/movies"><Film/> Movies</Link></Nav.Link>
-                <Nav.Link><Link className={(data.path==='/books' || data.path==='/books/form')?'':'text-light'} to="/books"><Book/> Books</Link></Nav.Link>
-                <Nav.Link><Link className={(data.path==='/people' || data.path==='/people/form')?'':'text-light'} to="/people"><Person/> People</Link></Nav.Link>
+                <Nav.Link><Link className={(data.path.startsWith('/movies'))?'':'text-light'} to="/movies"><Film/> Movies</Link></Nav.Link>
+                <Nav.Link><Link className={(data.path.startsWith('/books'))?'':'text-light'} to="/books"><Book/> Books</Link></Nav.Link>
+                <Nav.Link><Link className={(data.path.startsWith('/people'))?'':'text-light'} to="/people"><Person/> People</Link></Nav.Link>
             </Nav>
             <Form inline>
                 <h5 className="text-light mt-auto">({loadFromStorage('username')})</h5>

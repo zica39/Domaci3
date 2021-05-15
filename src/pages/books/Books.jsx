@@ -1,43 +1,76 @@
-import React, {useState, useReducer} from 'react';
+import React, {useState, useReducer, useEffect} from 'react';
 import Grid from "../../components/grid/Grid";
 import books from "../../constants/books";
 import AppData from "../../contexts/AppData";
 import {useHistory} from 'react-router-dom';
 import {loadFromStorage, saveToStorage} from "../../functions/tools";
 import {changeData} from "../../functions/changeData";
+import {getBooks, login, deleteBook, getBooksCount} from "../../services/books";
 
 const Books = () => {
-    const items = loadFromStorage('books');
-    const [booksList, dispatch] = useReducer(changeData,items?items: books);
-    const[filteredItems,setFilteredItems] = useState([]);
+
+    const[filter,setFilter] = useState('');
+    const [books,setBooks] = useState([]);
+    const[page,setPage] = useState(0);
+    const[bookCount,setBookCount] = useState(0);
 
     const history = useHistory();
-    const header = ['Id', 'Title', 'Year','Author','...','...'];
-    const key = 'books', label = 'book';
+
+    const  label = 'book';
 
 
-    const onRowClick = (e) => {
-        saveToStorage('books_data',e);
-        history.push('/books/form');
+    const onEditRow = (row) => {
+        history.push('/books/form/'+row.id);
     }
 
+    const onNewRow = ()=>{
+        history.push('/books/form');
+    }
+    const onRowDelete = (row)=>{
+        if(window.confirm('Are you sure?')){
+            deleteBook(row.id).then(response => {
+                history.push('/books');
+            }).catch(error => {
+                alert(error?.response?.data?.detail);
+            })
+        }
+    }
 
-    return <AppData.Provider value={{
-        list: booksList,
-        dispatch: (e) => dispatch(e)}}>
-        <div className="container-fluid">
+    useEffect(()=>{
+        getBooks(page,filter).then(function(response){
+            setBooks(response.data);
+            getBooksCount(filter).then(res=>{
+                setBookCount(res.data);
+            }).catch(err=>alert(err?.data?.title));
+
+
+        }).catch(function (error) {
+            alert(error?.response?.data?.detail);
+        });
+    },[page,filter]);
+
+
+
+    return<div className="container-fluid">
             <div>
                 {
-                    <Grid onRowClick={onRowClick}
-                          filteredItems={filteredItems} setFilteredItems={setFilteredItems}
-                          header={header}
-                          key_name={key}
+                    <Grid onEditRow={onEditRow}
+                          onNewRow={onNewRow}
+                          onRowDelete={onRowDelete}
+                          data={books}
                           label={label}
+
+                          bookCount={bookCount}
+                          setPage={setPage}
+                          page={page}
+
+                          filter={filter}
+                          setFilter={setFilter}
                     />
                 }
             </div>
         </div>
-    </AppData.Provider>
+
 }
 
 export default Books;
