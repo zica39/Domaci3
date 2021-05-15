@@ -20,11 +20,11 @@ const Books = () => {
 
 
     const onEditRow = (row) => {
-        history.push('/books/form/'+row.id);
+        history.push('/books/edit/'+row.id);
     }
 
     const onNewRow = ()=>{
-        history.push('/books/form');
+        history.push('/books/create');
     }
     const onRowDelete = (row)=>{
         if(window.confirm('Are you sure?')){
