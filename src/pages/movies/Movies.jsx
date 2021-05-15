@@ -1,44 +1,76 @@
-import React, {useState, useReducer} from 'react';
+import React, {useState, useEffect} from 'react';
 import Grid from "../../components/grid/Grid";
-import movies from "../../constants/movies";
 import {useHistory} from 'react-router-dom';
-import {loadFromStorage, saveToStorage} from "../../functions/tools";
-import {changeData} from "../../functions/changeData";
-import AppData from "../../contexts/AppData";
-
+import {getMovies,deleteMovie,getMoviesCount} from "../../services/movies";
 
 const Movies = () => {
-    const items = loadFromStorage('movies');
-    const [moviesList, dispatch] = useReducer(changeData,items?items: movies);
-    const[filteredItems,setFilteredItems] = useState([]);
+
+    const[filter,setFilter] = useState('');
+    const[movies,setMovies] = useState([]);
+    const[page,setPage] = useState(0);
+    const[moviesCount,setMoviesCount] = useState(0);
 
     const history = useHistory();
-    const header = ['Id', 'Title', 'Year','...','...'];
-    const key = 'movies', label = 'movie';
+
+    const  label = 'movie';
 
 
-    const onRowClick = (e) => {
-        saveToStorage('movies_data',e);
-        history.push('/movies/form');
+    const onEditRow = (row) => {
+        history.push('/movies/edit/'+row.id);
     }
 
+    const onNewRow = ()=>{
+        history.push('/movies/create');
+    }
+    const onRowDelete = (row)=>{
+        if(window.confirm('Are you sure?')){
+            deleteMovie(row.id).then(response => {
+                console.log(response);
+                history.push('/movies');
+            }).catch(error => {
+                alert(error?.message);
+            })
+        }
+    }
 
-    return <AppData.Provider value={{
-        list: moviesList,
-        dispatch: (e) => dispatch(e)}}>
-    <div className="container-fluid">
+    useEffect(()=>{
+        getMovies(page,filter).then(function(response){
+            setMovies(response.data);
+            getMoviesCount(filter).then(res=>{
+                setMoviesCount(res.data);
+            }).catch(error=>{
+                alert(error?.message)
+            });
+
+
+        }).catch(function (error) {
+            alert(error?.message);
+        });
+    },[page,filter]);
+
+
+
+    return<div className="container-fluid">
         <div>
             {
-                <Grid onRowClick={onRowClick}
-                      filteredItems={filteredItems} setFilteredItems={setFilteredItems}
-                      header={header}
-                      key_name={key}
+                <Grid onEditRow={onEditRow}
+                      onNewRow={onNewRow}
+                      onRowDelete={onRowDelete}
+                      data={movies}
                       label={label}
+
+                      itemsCount={moviesCount}
+                      setPage={setPage}
+                      page={page}
+
+                      filter={filter}
+                      setFilter={setFilter}
                 />
             }
         </div>
     </div>
-    </AppData.Provider>
+
 }
 
 export default Movies;
+

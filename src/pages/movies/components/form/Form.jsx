@@ -1,35 +1,55 @@
-import React, {useState} from 'react';
-import { X,Save,PlusCircle } from 'react-bootstrap-icons';
-import {useHistory} from 'react-router-dom';
-import {destroyData, loadFromStorage, saveToStorage} from "../../../../functions/tools";
-
+import React, {useEffect, useState} from 'react';
+import {PlusCircle, Save, X} from 'react-bootstrap-icons';
+import {useHistory,useParams} from 'react-router-dom';
+import {generateFormData} from "../../../../functions/tools";
+import {createMovie,getMovie,updateMovie} from "../../../../services/movies";
+import movie_model from "../../../../constants/movie_model";
 
 const Form = () => {
 
-    const data = loadFromStorage('movies_data');
-
-    const [title, setTitle] = useState(data?.title ? data?.title : '');
-    const [year, setYear] = useState(data?.year ? data?.year : '');
+    const [formData, setFormData] = useState(generateFormData(movie_model));
+    const [disabled,setDisabled] = useState(false);
+    const[loading, setLoading] = useState(false);
 
     const history = useHistory();
+    const { id } = useParams();
+
+    useEffect(()=>{
+        if(id) {
+            setLoading(true);
+            getMovie(id).then(response => {
+                //console.log(response.data);
+                setFormData(response.data);
+                setLoading(false);
+            }).catch(error => {
+                alert(error?.message);
+            })
+        }
+    },[id]);
 
     const onSave = () => {
+        setDisabled(true);
 
-        if(!title){
-            alert('Title field is required!');
-            return false;
-        }
+        if(id){
+            updateMovie(formData).then(response =>{
+                history.push('/movies');
+            }).catch(error =>{
+                alert(error?.message);
+                setDisabled(false);
+            });
 
-        if(data?.id){
-            saveToStorage('movies_data',{type: 'edit', data: {id: data?.id, title: title, year: year}})
         }else{
-            saveToStorage('movies_data',{type: 'add', data: {title: title, year: year}})
+            createMovie(formData).then(response =>{
+                history.push('/movies');
+            }).catch(error =>{
+                alert(error?.message);
+                setDisabled(false);
+            });
         }
-        history.push('/movies')
+
     }
 
     const onExit = () =>{
-        destroyData('movies_data')
         history.push('/movies');
     }
 
@@ -37,31 +57,75 @@ const Form = () => {
         <button onClick={()=>onExit()} className="btn btn-sm mt-1 btn-outline-danger float-right"><X/></button>
         <div className='row my-3'>
             <div className="col-sm-10 offset-sm-1 col-md-6 offset-md-3">
-        <form>
-            <h4 className='mb-3'> {data?.id?'Edit':'Create'} Movie</h4>
-            <div className="form-group">
-                <label htmlFor="exampleInputEmail1">Film title</label>
-                <input type="text" className="form-control shadow-sm" id="exampleInputEmail1" aria-describedby="emailHelp"
-                       placeholder="Title"
-                       value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                />
+                {loading?
+                    <div className="spinner-border text-primary"/>:
+                    <form>
+                        <h4 className='mb-3'> {id?'Edit':'Create'} Movie</h4>
 
+                        <div className="form-group" >
+                            <label htmlFor="directorName">directorName</label>
+                            <input type="text" className="form-control shadow-sm" id="directorName" aria-describedby="directorName"
+                                   placeholder="directorName"
+                                   value={formData.directorName}
+                                   onChange={(e) => setFormData(prevState => {
+                                       return{...prevState,'directorName':e.target.value}
+                                   })}
+                            />
+                        </div>
+
+                        <div className="form-group" >
+                            <label htmlFor="duration">duration</label>
+                            <input type="number" className="form-control shadow-sm" id="duration" aria-describedby="duration"
+                                   placeholder="duration"
+                                   value={formData.duration}
+                                   onChange={(e) => setFormData(prevState => {
+                                       return{...prevState,'duration':e.target.value}
+                                   })}
+                            />
+                        </div>
+
+                        <div className="form-group" >
+                            <label htmlFor="name">name</label>
+                            <input type="text" className="form-control shadow-sm" id="name" aria-describedby="name"
+                                   placeholder="name"
+                                   value={formData.name}
+                                   onChange={(e) => setFormData(prevState => {
+                                       return{...prevState,'name':e.target.value}
+                                   })}
+                            />
+                        </div>
+
+                        <div className="form-group" >
+                            <label htmlFor="rating">rating</label>
+                            <input type="number" className="form-control shadow-sm" id="rating" aria-describedby="rating"
+                                   placeholder="rating"
+                                   value={formData.rating}
+                                   onChange={(e) => setFormData(prevState => {
+                                       return{...prevState,'rating':e.target.value}
+                                   })}
+                            />
+                        </div>
+
+                        <div className="form-group" >
+                            <label htmlFor="writerName">writerName</label>
+                            <input type="text" className="form-control shadow-sm" id="writerName" aria-describedby="writerName"
+                                   placeholder="writerName"
+                                   value={formData.writerName}
+                                   onChange={(e) => setFormData(prevState => {
+                                       return{...prevState,'writerName':e.target.value}
+                                   })}
+                            />
+                        </div>
+
+                        {disabled ? <div className="spinner-border"/> :
+                            <button type="button" className={`btn ${id ? 'btn-primary' : 'btn-success'} rounded`}
+                                    onClick={() => onSave()}>{id ? <Save/> :
+                                <PlusCircle/>} {id ? 'Save' : 'Create'}</button>
+                        }
+                    </form>}
             </div>
-            <div className="form-group">
-                <label htmlFor="exampleInputPassword1">Year</label>
-                <input type="number" className="form-control shadow-sm" id="exampleInputPassword1" placeholder="Year"
-                       value={year}
-                       onChange={(e) => setYear(e.target.value)}
-                />
-            </div>
-
-            <button type="button" className={`btn ${data?.id?'btn-primary':'btn-success'} rounded`} onClick={() => onSave()}>{data?.id?<Save/>:<PlusCircle/>} {data?.id?'Save':'Create'}</button>
-        </form>
-
         </div>
-        </div>
-        </div>;
+    </div>;
 }
 
 export default Form;

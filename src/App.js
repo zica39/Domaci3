@@ -20,14 +20,16 @@ function App() {
     <div className="App">
         <Switch>
             <PrivateRoute path="/movies" exact component={Movies} isPrivate/>
-            <PrivateRoute path="/movies/form" exact component={MovieForm} isPrivate/>
+            <PrivateRoute path="/movies/create" exact component={MovieForm} isPrivate/>
+            <PrivateRoute path="/movies/edit/:id" exact component={MovieForm} isPrivate/>
 
             <PrivateRoute path="/books" exact component={Books} isPrivate/>
             <PrivateRoute path="/books/create/" exact component={BookForm} isPrivate/>
             <PrivateRoute path="/books/edit/:id" exact component={BookForm} isPrivate/>
 
             <PrivateRoute path="/people" exact component={People} isPrivate/>
-            <PrivateRoute path="/people/form" exact component={PeopleForm} isPrivate/>
+            <PrivateRoute path="/people/create" exact component={PeopleForm} isPrivate/>
+            <PrivateRoute path="/people/edit/:id" exact component={PeopleForm} isPrivate/>
 
             <PrivateRoute path="/login" component={Login}/>
             <PrivateRoute path="/" component={Welcome} isPrivate/>

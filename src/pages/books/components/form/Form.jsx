@@ -3,7 +3,7 @@ import {PlusCircle, Save, X} from 'react-bootstrap-icons';
 import {useHistory,useParams} from 'react-router-dom';
 import {generateFormData} from "../../../../functions/tools";
 import {createBook, getBook, updateBook} from "../../../../services/books";
-import book_model from "../../../../constants/books";
+import book_model from "../../../../constants/book_model";
 
 const Form = () => {
 
@@ -25,7 +25,7 @@ const Form = () => {
                 alert(error?.message);
             })
         }
-    },[]);
+    },[id]);
 
     const onSave = () => {
         setDisabled(true);

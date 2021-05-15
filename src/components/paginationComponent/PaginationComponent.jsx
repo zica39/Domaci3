@@ -1,10 +1,10 @@
 import {Pagination} from "react-bootstrap";
 
-const PaginationComponent = ({bookCount,setPage,page}) => {
+const PaginationComponent = ({itemCount,setPage,page}) => {
 
     let active = page + 1;
     let items = [];
-    let count = Math.floor(bookCount/21) + 1;
+    let count = Math.floor(itemCount/21) + 1;
 
     for (let number = 1; number <= count; number++) {
         items.push(

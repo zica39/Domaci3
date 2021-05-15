@@ -8,7 +8,7 @@ const Books = () => {
     const[filter,setFilter] = useState('');
     const[books,setBooks] = useState([]);
     const[page,setPage] = useState(0);
-    const[bookCount,setBookCount] = useState(0);
+    const[booksCount,setBooksCount] = useState(0);
 
     const history = useHistory();
 
@@ -37,14 +37,14 @@ const Books = () => {
         getBooks(page,filter).then(function(response){
             setBooks(response.data);
             getBooksCount(filter).then(res=>{
-                setBookCount(res.data);
+                setBooksCount(res.data);
             }).catch(error=>{
                 alert(error?.message)
             });
 
 
         }).catch(function (error) {
-            alert(error?.response?.data?.detail);
+            alert(error?.message);
         });
     },[page,filter]);
 
@@ -59,7 +59,7 @@ const Books = () => {
                           data={books}
                           label={label}
 
-                          bookCount={bookCount}
+                          itemsCount={booksCount}
                           setPage={setPage}
                           page={page}
 

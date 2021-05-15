@@ -5,7 +5,7 @@ import PaginationComponent from "../paginationComponent/PaginationComponent";
 import SearchComponent from "../SearchComponent/SearchComponent";
 
 
-const Grid = ({onEditRow,onNewRow,onRowDelete,label,data,setPage,bookCount,page,filter,setFilter}) => {
+const Grid = ({onEditRow,onNewRow,onRowDelete,label,data,setPage,itemsCount,page,filter,setFilter}) => {
 
     return <div className="bg-light shadow-sm">
 
@@ -13,7 +13,7 @@ const Grid = ({onEditRow,onNewRow,onRowDelete,label,data,setPage,bookCount,page,
         <SearchComponent filter={filter} setFilter={setFilter}/>
 
         <TableComponent  data={data} onEditRow={onEditRow} onRowDelete={onRowDelete} />
-        <PaginationComponent bookCount={bookCount} setPage={setPage} page={page} />
+        <PaginationComponent itemCount={itemsCount} setPage={setPage} page={page} />
 
     </div>;
 }

@@ -3,7 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import {useHistory} from "react-router-dom";
 import {saveToStorage} from "../../functions/tools";
-import { Lock,BoxArrowRight,ArrowRepeat } from 'react-bootstrap-icons';
+import { Lock,BoxArrowRight } from 'react-bootstrap-icons';
 import {login} from '../../services/auth';
 
 const Login = () => {
@@ -28,7 +28,7 @@ const Login = () => {
             history.push('/');
 
         }).catch(function (error) {
-            alert(error?.response?.data?.detail);
+            alert(error?.message);
             setDisabled(false)
         });
 
