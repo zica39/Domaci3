@@ -9,6 +9,7 @@ const People = () => {
     const[people,setPeople] = useState([]);
     const[page,setPage] = useState(0);
     const[peopleCount,setPeopleCount] = useState(0);
+    const[loading,setLoading] = useState(false);
 
     const history = useHistory();
 
@@ -34,10 +35,12 @@ const People = () => {
     }
 
     useEffect(()=>{
+        setLoading(true);
         getPeople(page,filter).then(function(response){
             setPeople(response.data);
             getPeopleCount(filter).then(res=>{
                 setPeopleCount(res.data);
+                setLoading(false);
             }).catch(error=>{
                 alert(error?.message)
             });
@@ -65,6 +68,7 @@ const People = () => {
 
                       filter={filter}
                       setFilter={setFilter}
+                      loading={loading}
                 />
             }
         </div>

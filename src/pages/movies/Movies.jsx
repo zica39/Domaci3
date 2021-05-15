@@ -9,6 +9,7 @@ const Movies = () => {
     const[movies,setMovies] = useState([]);
     const[page,setPage] = useState(0);
     const[moviesCount,setMoviesCount] = useState(0);
+    const[loading,setLoading] = useState(false);
 
     const history = useHistory();
 
@@ -34,10 +35,12 @@ const Movies = () => {
     }
 
     useEffect(()=>{
+        setLoading(true);
         getMovies(page,filter).then(function(response){
             setMovies(response.data);
             getMoviesCount(filter).then(res=>{
                 setMoviesCount(res.data);
+                setLoading(false);
             }).catch(error=>{
                 alert(error?.message)
             });
@@ -65,6 +68,7 @@ const Movies = () => {
 
                       filter={filter}
                       setFilter={setFilter}
+                      loading={loading}
                 />
             }
         </div>

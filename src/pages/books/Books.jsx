@@ -9,6 +9,7 @@ const Books = () => {
     const[books,setBooks] = useState([]);
     const[page,setPage] = useState(0);
     const[booksCount,setBooksCount] = useState(0);
+    const[loading,setLoading] = useState(false);
 
     const history = useHistory();
 
@@ -24,6 +25,7 @@ const Books = () => {
     }
     const onRowDelete = (row)=>{
         if(window.confirm('Are you sure?')){
+            setLoading(true);
             deleteBook(row.id).then(response => {
                 console.log(response);
                 history.push('/books');
@@ -34,10 +36,12 @@ const Books = () => {
     }
 
     useEffect(()=>{
+        setLoading(true);
         getBooks(page,filter).then(function(response){
             setBooks(response.data);
             getBooksCount(filter).then(res=>{
                 setBooksCount(res.data);
+                setLoading(false);
             }).catch(error=>{
                 alert(error?.message)
             });
@@ -65,6 +69,7 @@ const Books = () => {
 
                           filter={filter}
                           setFilter={setFilter}
+                          loading={loading}
                     />
                 }
             </div>
