@@ -28,8 +28,8 @@ const Login = () => {
             history.push('/');
 
         }).catch(function (error) {
-            alert(error?.message);
-            setDisabled(false)
+            alert(error?.response?.data?.detail);
+            setDisabled(false);
         });
 
     }

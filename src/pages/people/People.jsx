@@ -26,7 +26,7 @@ const People = () => {
         if(window.confirm('Are you sure?')){
             deletePerson(row.id).then(response => {
                 console.log(response);
-                history.push('/movies');
+                history.push('/people');
             }).catch(error => {
                 alert(error?.message);
             })

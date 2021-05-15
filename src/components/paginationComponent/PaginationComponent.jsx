@@ -1,10 +1,11 @@
 import {Pagination} from "react-bootstrap";
+import {ITEMS_PER_PAGE} from "../../constants/config";
 
 const PaginationComponent = ({itemCount,setPage,page}) => {
 
     let active = page + 1;
     let items = [];
-    let count = Math.floor(itemCount/21) + 1;
+    let count = Math.floor(itemCount/(ITEMS_PER_PAGE-2)) + 1;
 
     for (let number = 1; number <= count; number++) {
         items.push(
@@ -14,7 +15,6 @@ const PaginationComponent = ({itemCount,setPage,page}) => {
         );
     }
 
-
     return <div className="d-flex justify-content-center">
         <Pagination >
             <Pagination.Prev disabled={active===1} onClick={()=>{setPage(pre=>pre-1)}}/>
@@ -22,7 +22,6 @@ const PaginationComponent = ({itemCount,setPage,page}) => {
             <Pagination.Next disabled={active===count} onClick={()=>{setPage(pre=>pre+1)}} />
         </Pagination>
     </div>
-
 
 }
 

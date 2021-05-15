@@ -27,6 +27,7 @@ const NavbarTop = () => {
                 <h5 className="text-light mt-auto">({loadFromStorage('username')})</h5>
                 <Nav.Link className="text-light" onClick={() => {
                     destroyData('role');
+                    destroyData('id_token');
                     history.push("/login");
                 }}><DoorClosed/><small>Log out</small></Nav.Link>
 

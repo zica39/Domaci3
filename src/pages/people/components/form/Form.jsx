@@ -95,7 +95,7 @@ const Form = () => {
                         </div>
 
                         <div className="form-group" >
-                            <label htmlFor="dateOfBirth">age</label>
+                            <label htmlFor="dateOfBirth">dateOfBirth</label>
                             <input type="date" className="form-control shadow-sm" id="dateOfBirth" aria-describedby="dateOfBirth"
                                    placeholder="Enter dateOfBirth"
                                    value={formData.dateOfBirth}
