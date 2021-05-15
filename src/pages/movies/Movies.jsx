@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import Grid from "../../components/grid/Grid";
 import {useHistory} from 'react-router-dom';
 import {getMovies,deleteMovie,getMoviesCount} from "../../services/movies";
+import DeleteModal from "../../components/DeleteModal/DeleteModal";
 
 const Movies = () => {
 
@@ -10,6 +11,8 @@ const Movies = () => {
     const[page,setPage] = useState(0);
     const[moviesCount,setMoviesCount] = useState(0);
     const[loading,setLoading] = useState(false);
+
+    const[deleteId,setDeleteId] = useState(0);
 
     const history = useHistory();
 
@@ -24,14 +27,17 @@ const Movies = () => {
         history.push('/movies/create');
     }
     const onRowDelete = (row)=>{
-        if(window.confirm('Are you sure?')){
-            deleteMovie(row.id).then(response => {
-                console.log(response);
-                history.push('/movies');
-            }).catch(error => {
-                alert(error?.message);
-            })
-        }
+        setDeleteId(row.id);
+    }
+
+    const removeRow = (id) => {
+        setLoading(true);
+        deleteMovie(id).then(() => {
+            history.push('/movies');
+        }).catch(error => {
+            setDeleteId(0);
+            alert(error?.message);
+        })
     }
 
     useEffect(()=>{
@@ -72,6 +78,7 @@ const Movies = () => {
                 />
             }
         </div>
+        {deleteId?<DeleteModal id={deleteId} setDeleteId={setDeleteId} removeRow={removeRow} />:''}
     </div>
 
 }

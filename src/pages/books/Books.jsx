@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import Grid from "../../components/grid/Grid";
+import DeleteModal from "../../components/DeleteModal/DeleteModal";
 import {useHistory} from 'react-router-dom';
 import {getBooks, deleteBook, getBooksCount} from "../../services/books";
 
@@ -10,6 +11,8 @@ const Books = () => {
     const[page,setPage] = useState(0);
     const[booksCount,setBooksCount] = useState(0);
     const[loading,setLoading] = useState(false);
+
+    const[deleteId,setDeleteId] = useState(0);
 
     const history = useHistory();
 
@@ -24,15 +27,17 @@ const Books = () => {
         history.push('/books/create');
     }
     const onRowDelete = (row)=>{
-        if(window.confirm('Are you sure?')){
-            setLoading(true);
-            deleteBook(row.id).then(response => {
-                console.log(response);
-                history.push('/books');
-            }).catch(error => {
-                alert(error?.message);
-            })
-        }
+        setDeleteId(row.id);
+    }
+
+    const removeRow = (id) => {
+        setLoading(true);
+        deleteBook(id).then(() => {
+            history.push('/books');
+        }).catch(error => {
+            setDeleteId(0);
+            alert(error?.message);
+        })
     }
 
     useEffect(()=>{
@@ -73,6 +78,7 @@ const Books = () => {
                     />
                 }
             </div>
+            {deleteId?<DeleteModal id={deleteId} setDeleteId={setDeleteId} removeRow={removeRow} />:''}
         </div>
 
 }

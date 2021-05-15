@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import Grid from "../../components/grid/Grid";
 import {useHistory} from 'react-router-dom';
 import {getPeople,deletePerson,getPeopleCount} from "../../services/people";
+import DeleteModal from "../../components/DeleteModal/DeleteModal";
 
 const People = () => {
 
@@ -10,6 +11,8 @@ const People = () => {
     const[page,setPage] = useState(0);
     const[peopleCount,setPeopleCount] = useState(0);
     const[loading,setLoading] = useState(false);
+
+    const[deleteId,setDeleteId] = useState(0);
 
     const history = useHistory();
 
@@ -24,14 +27,17 @@ const People = () => {
         history.push('/people/create');
     }
     const onRowDelete = (row)=>{
-        if(window.confirm('Are you sure?')){
-            deletePerson(row.id).then(response => {
-                console.log(response);
-                history.push('/people');
-            }).catch(error => {
-                alert(error?.message);
-            })
-        }
+        setDeleteId(row.id);
+    }
+
+    const removeRow = (id) => {
+        setLoading(true);
+        deletePerson(id).then(() => {
+            history.push('/people');
+        }).catch(error => {
+            setDeleteId(0);
+            alert(error?.message);
+        })
     }
 
     useEffect(()=>{
@@ -72,6 +78,7 @@ const People = () => {
                 />
             }
         </div>
+        {deleteId?<DeleteModal id={deleteId} setDeleteId={setDeleteId} removeRow={removeRow} />:''}
     </div>
 
 }
