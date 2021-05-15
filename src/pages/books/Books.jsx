@@ -1,16 +1,12 @@
-import React, {useState, useReducer, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import Grid from "../../components/grid/Grid";
-import books from "../../constants/books";
-import AppData from "../../contexts/AppData";
 import {useHistory} from 'react-router-dom';
-import {loadFromStorage, saveToStorage} from "../../functions/tools";
-import {changeData} from "../../functions/changeData";
-import {getBooks, login, deleteBook, getBooksCount} from "../../services/books";
+import {getBooks, deleteBook, getBooksCount} from "../../services/books";
 
 const Books = () => {
 
     const[filter,setFilter] = useState('');
-    const [books,setBooks] = useState([]);
+    const[books,setBooks] = useState([]);
     const[page,setPage] = useState(0);
     const[bookCount,setBookCount] = useState(0);
 
@@ -29,9 +25,10 @@ const Books = () => {
     const onRowDelete = (row)=>{
         if(window.confirm('Are you sure?')){
             deleteBook(row.id).then(response => {
+                console.log(response);
                 history.push('/books');
             }).catch(error => {
-                alert(error?.response?.data?.detail);
+                alert(error?.message);
             })
         }
     }
@@ -41,7 +38,9 @@ const Books = () => {
             setBooks(response.data);
             getBooksCount(filter).then(res=>{
                 setBookCount(res.data);
-            }).catch(err=>alert(err?.data?.title));
+            }).catch(error=>{
+                alert(error?.message)
+            });
 
 
         }).catch(function (error) {

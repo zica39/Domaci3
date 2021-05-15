@@ -1,29 +1,31 @@
 import React, {useEffect, useState} from 'react';
 import {PlusCircle, Save, X} from 'react-bootstrap-icons';
 import {useHistory,useParams} from 'react-router-dom';
-import {generateFormData,generateFormFields} from "../../../../functions/tools";
+import {generateFormData} from "../../../../functions/tools";
 import {createBook, getBook, updateBook} from "../../../../services/books";
 import book_model from "../../../../constants/books";
 
 const Form = () => {
 
-
     const [formData, setFormData] = useState(generateFormData(book_model));
     const [disabled,setDisabled] = useState(false);
+    const[loading, setLoading] = useState(false);
 
     const history = useHistory();
     const { id } = useParams();
 
     useEffect(()=>{
         if(id) {
+            setLoading(true);
             getBook(id).then(response => {
-                console.log(response.data);
+                //console.log(response.data);
                 setFormData(response.data);
+                setLoading(false);
             }).catch(error => {
-                alert(error?.data?.title);
+                alert(error?.message);
             })
         }
-    },[])
+    },[]);
 
     const onSave = () => {
         setDisabled(true);
@@ -32,7 +34,7 @@ const Form = () => {
             updateBook(formData).then(response =>{
                 history.push('/books');
             }).catch(error =>{
-                alert(error?.data?.title);
+                alert(error?.message);
                 setDisabled(false);
             });
 
@@ -40,7 +42,7 @@ const Form = () => {
            createBook(formData).then(response =>{
                history.push('/books');
            }).catch(error =>{
-               alert(error?.data?.title);
+               alert(error?.message);
                setDisabled(false);
            });
         }
@@ -55,8 +57,9 @@ const Form = () => {
         <button onClick={()=>onExit()} className="btn btn-sm mt-1 btn-outline-danger float-right"><X/></button>
         <div className='row my-3'>
             <div className="col-sm-10 offset-sm-1 col-md-6 offset-md-3">
-                <form>
-                    {/*{generateFormFields(book_model,formData,setFormData)}*/}
+                {loading?
+                    <div className="spinner-border text-primary"/>:
+                    <form>
                     <h4 className='mb-3'> {id?'Edit':'Create'} Book</h4>
                     <div className="form-group" >
                         <label htmlFor="isbn">isbn</label>
@@ -115,10 +118,12 @@ const Form = () => {
                         />
                     </div>
 
-                    <button type="button"  className={`btn ${id?'btn-primary':'btn-success'} rounded`} onClick={() => onSave()}>{id?<Save/>:<PlusCircle/>} {id?'Save':'Create'}</button>
-                    {disabled?<div className="spinner-border"/>:''}
-                </form>
-
+                    {disabled ? <div className="spinner-border"/> :
+                        <button type="button" className={`btn ${id ? 'btn-primary' : 'btn-success'} rounded`}
+                                onClick={() => onSave()}>{id ? <Save/> :
+                            <PlusCircle/>} {id ? 'Save' : 'Create'}</button>
+                    }
+                </form>}
             </div>
         </div>
     </div>;
