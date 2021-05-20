@@ -24,3 +24,7 @@ export const generateFormData = (model) =>{
     })
     return output;
 }
+
+export const getToken = () =>{
+    return 'Bearer '+loadFromStorage('id_token');
+}

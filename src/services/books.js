@@ -1,68 +1,51 @@
-import axios from "axios";
-import {loadFromStorage} from "../functions/tools";
-import{BASE_URL} from "../constants/config";
+import axiosInstance from "./axios";
+import {getToken} from "../functions/tools";
 
 export const getBooks = (page,filter) => {
 
-    let query =  filter?'isbn.contains='+filter:'';
-    page = query?0:page;
-
-    return axios({
-        baseURL: BASE_URL,
-        method: 'get',
-        url: '/books?page='+page +'&'+ query,
-        headers: {'Authorization': 'Bearer '+loadFromStorage('id_token')},
-    })
+    return axiosInstance.get('/books',{
+        params:{
+            page:filter?0:page,
+            "isbn.contains":filter
+        },
+        headers:{'Authorization': getToken()}
+    });
 }
 
 export const getBooksCount = (filter) => {
-    let query =  filter?'?isbn.contains='+filter:'';
 
-    return axios({
-        baseURL: BASE_URL,
-        method: 'get',
-        url: '/books/count'+ query,
-        headers: {'Authorization': 'Bearer '+loadFromStorage('id_token')},
-    })
+    return axiosInstance.get('/books/count',{
+        params:{
+            "isbn.contains":filter
+        },
+        headers:{'Authorization': getToken()}
+    });
 }
-export const getBook = (id) => {
-    return axios({
-        baseURL: BASE_URL,
-        method: 'get',
-        url: '/books/'+id,
-        headers: {'Authorization': 'Bearer '+loadFromStorage('id_token')},
 
-    })
+export const getBook = (id) => {
+
+    return axiosInstance.get('/books/'+id,{
+        headers:{'Authorization': getToken()}
+    });
 }
 
 export const deleteBook = (id) => {
-    return axios({
-        baseURL: BASE_URL,
-        method: 'delete',
-        url: '/books/'+id,
-        headers: {'Authorization': 'Bearer '+loadFromStorage('id_token')},
 
-    })
+    return axiosInstance.delete('/books/'+id,{
+        headers:{'Authorization': getToken()}
+    });
 }
 
-export const createBook = (data) =>{
+export const createBook = (data) => {
 
-    return axios({
-        baseURL: BASE_URL,
-        method: 'post',
-        url: '/books',
-        headers: {'Authorization': 'Bearer '+loadFromStorage('id_token')},
-        data:data
-    })
+    return axiosInstance.post('/books',data,{
+        headers:{'Authorization': getToken()},
+    });
 }
 
-export const updateBook = (data) =>{
+export const updateBook = (data) => {
 
-    return axios({
-        baseURL: BASE_URL,
-        method: 'put',
-        url: '/books',
-        headers: {'Authorization': 'Bearer '+loadFromStorage('id_token')},
-        data:data
-    })
+    return axiosInstance.put('/books',data,{
+        headers:{'Authorization': getToken()},
+    });
 }

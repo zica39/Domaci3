@@ -1,68 +1,51 @@
-import axios from "axios";
-import {loadFromStorage} from "../functions/tools";
-import {BASE_URL} from "../constants/config";
+import axiosInstance from "./axios";
+import {getToken} from "../functions/tools";
 
 export const getMovies = (page,filter) => {
 
-    let query =  filter?'name.contains='+filter:'';
-    page = query?0:page;
-
-    return axios({
-        baseURL: BASE_URL,
-        method: 'get',
-        url: '/movies?page='+page +'&'+ query,
-        headers: {'Authorization': 'Bearer '+loadFromStorage('id_token')},
-    })
+    return axiosInstance.get('/movies',{
+        params:{
+            page:filter?0:page,
+            "name.contains":filter
+        },
+        headers:{'Authorization': getToken()}
+    });
 }
 
 export const getMoviesCount = (filter) => {
-    let query =  filter?'?name.contains='+filter:'';
 
-    return axios({
-        baseURL: BASE_URL,
-        method: 'get',
-        url: '/movies/count'+ query,
-        headers: {'Authorization': 'Bearer '+loadFromStorage('id_token')},
-    })
+    return axiosInstance.get('/movies/count',{
+        params:{
+            "name.contains":filter
+        },
+        headers:{'Authorization': getToken()}
+    });
 }
-export const getMovie = (id) => {
-    return axios({
-        baseURL: BASE_URL,
-        method: 'get',
-        url: '/movies/'+id,
-        headers: {'Authorization': 'Bearer '+loadFromStorage('id_token')},
 
-    })
+export const getMovie = (id) => {
+
+    return axiosInstance.get('/movies/'+id,{
+        headers:{'Authorization': getToken()}
+    });
 }
 
 export const deleteMovie = (id) => {
-    return axios({
-        baseURL: BASE_URL,
-        method: 'delete',
-        url: '/movies/'+id,
-        headers: {'Authorization': 'Bearer '+loadFromStorage('id_token')},
 
-    })
+    return axiosInstance.delete('/movies/'+id,{
+        headers:{'Authorization': getToken()}
+    });
 }
 
-export const createMovie = (data) =>{
+export const createMovie = (data) => {
 
-    return axios({
-        baseURL: BASE_URL,
-        method: 'post',
-        url: '/movies',
-        headers: {'Authorization': 'Bearer '+loadFromStorage('id_token')},
-        data:data
-    })
+    return axiosInstance.post('/movies',data,{
+        headers:{'Authorization': getToken()},
+    });
 }
 
-export const updateMovie = (data) =>{
+export const updateMovie= (data) => {
 
-    return axios({
-        baseURL: BASE_URL,
-        method: 'put',
-        url: '/movies',
-        headers: {'Authorization': 'Bearer '+loadFromStorage('id_token')},
-        data:data
-    })
+    return axiosInstance.put('/movies',data,{
+        headers:{'Authorization': getToken()},
+    });
 }

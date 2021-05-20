@@ -1,13 +1,5 @@
-import axios from "axios";
-import {BASE_URL} from "../constants/config";
+import axiosInstance from "../services/axios";
 
-export const login = (data) =>{
-
-    return axios({
-        baseURL: BASE_URL,
-        method: 'post',
-        url: '/authenticate',
-        data: data
-    })
-
+export const login = (data) => {
+    return axiosInstance.post('/authenticate',data);
 }
