@@ -1,6 +1,7 @@
 import './App.css';
 import React from 'react';
 import {Switch} from 'react-router-dom';
+import {QueryClient,QueryClientProvider} from 'react-query';
 
 import Login from "./pages/login/Login";
 import PrivateRoute from "./privateRoute/PrivateRoute";
@@ -14,9 +15,14 @@ import MovieForm from './pages/movies/components/form/Form'
 import BookForm from './pages/books/components/form/Form'
 import PeopleForm from './pages/people/components/form/Form'
 
+
+
 function App() {
 
+    const queryClient = new QueryClient()
+
   return (
+      <QueryClientProvider client={queryClient}>
     <div className="App">
         <Switch>
             <PrivateRoute path="/movies" exact component={Movies} isPrivate/>
@@ -35,6 +41,7 @@ function App() {
             <PrivateRoute path="/" component={Welcome} isPrivate/>
         </Switch>
     </div>
+         </QueryClientProvider>
   );
 }
 

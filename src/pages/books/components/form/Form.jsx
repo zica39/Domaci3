@@ -2,8 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {PlusCircle, Save, X} from 'react-bootstrap-icons';
 import {useHistory,useParams} from 'react-router-dom';
 import {generateFormData} from "../../../../functions/tools";
-import {createBook, getBook, updateBook} from "../../../../services/books";
+import {createBook, deleteBook, getBook, updateBook} from "../../../../services/books";
 import book_model from "../../../../constants/book_model";
+import {useMutation} from "react-query";
 
 const Form = () => {
 
@@ -13,6 +14,24 @@ const Form = () => {
 
     const history = useHistory();
     const { id } = useParams();
+
+    const createMutation = useMutation(createBook, {
+        onSuccess: () => {
+            history.push('/books');
+        }
+    });
+
+    const updateMutation = useMutation(updateBook, {
+        onSuccess: () => {
+            history.push('/books');
+        }
+    });
+
+    if(updateMutation.isError || createMutation.isError){
+        alert(createMutation.error || updateMutation.error);
+        setDisabled(false);
+    }
+
 
     useEffect(()=>{
         if(id) {
@@ -31,20 +50,9 @@ const Form = () => {
         setDisabled(true);
 
         if(id){
-            updateBook(formData).then(response =>{
-                history.push('/books');
-            }).catch(error =>{
-                alert(error?.message);
-                setDisabled(false);
-            });
-
+            updateMutation.mutate(formData);
         }else{
-           createBook(formData).then(response =>{
-               history.push('/books');
-           }).catch(error =>{
-               alert(error?.message);
-               setDisabled(false);
-           });
+            createMutation.mutate(formData);
         }
 
     }

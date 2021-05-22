@@ -2,21 +2,33 @@ import React, {useState, useEffect} from 'react';
 import Grid from "../../components/grid/Grid";
 import DeleteModal from "../../components/DeleteModal/DeleteModal";
 import {useHistory} from 'react-router-dom';
-import {getBooks, deleteBook, getBooksCount} from "../../services/books";
+import {getBooks, deleteBook} from "../../services/books";
+import {useMutation, useQuery, useQueryClient} from "react-query";
+import useDebounce from '../../customHooks/useDebounce';
+import Swal from "sweetalert2";
 
 const Books = () => {
 
     const[filter,setFilter] = useState('');
-    const[books,setBooks] = useState([]);
-    const[page,setPage] = useState(0);
-    const[booksCount,setBooksCount] = useState(0);
-    const[loading,setLoading] = useState(false);
+    const debouncedValue = useDebounce(filter, 200);
 
+    const[page,setPage] = useState(0);
     const[deleteId,setDeleteId] = useState(0);
 
     const history = useHistory();
 
     const  label = 'book';
+
+    const queryClient = useQueryClient();
+    const { isLoading, isError, data, error } = useQuery(['books',{page:page,filter:debouncedValue}],  getBooks);
+
+
+    const deleteMutation = useMutation(deleteBook, {
+        onSuccess: () => {
+            history.push('/books');
+            queryClient.invalidateQueries('books');
+        }
+    })
 
 
     const onEditRow = (row) => {
@@ -26,38 +38,31 @@ const Books = () => {
     const onNewRow = ()=>{
         history.push('/books/create');
     }
-    const onRowDelete = (row)=>{
-        setDeleteId(row.id);
-    }
 
     const removeRow = (id) => {
-        setLoading(true);
-        deleteBook(id).then(() => {
-            history.push('/books');
-        }).catch(error => {
+
+        deleteMutation.mutate(id);
+
+        Swal.fire(
+            'Good job!',
+            'Item deleted successfully!',
+            'success'
+        );
+
+        if(deleteMutation.isError){
             setDeleteId(0);
-            alert(error?.message);
-        })
+            alert(deleteMutation.error);
+        }
     }
 
-    useEffect(()=>{
-        setLoading(true);
-        getBooks(page,filter).then(function(response){
-            setBooks(response.data);
-            getBooksCount(filter).then(res=>{
-                setBooksCount(res.data);
-                setLoading(false);
-            }).catch(error=>{
-                alert(error?.message);
-                setLoading(false);
-            });
 
-
-        }).catch(function (error) {
-            alert(error?.message);
-            setLoading(false);
-        });
-    },[page,filter]);
+    if(isError){
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: error
+        })
+    }
 
 
 
@@ -66,17 +71,17 @@ const Books = () => {
                 {
                     <Grid onEditRow={onEditRow}
                           onNewRow={onNewRow}
-                          onRowDelete={onRowDelete}
-                          data={books}
+                          onRowDelete={setDeleteId}
+                          data={data?data.data:[]}
                           label={label}
 
-                          itemsCount={booksCount}
+                          itemsCount={parseInt(data?.headers['x-total-count'])}
                           setPage={setPage}
                           page={page}
 
                           filter={filter}
                           setFilter={setFilter}
-                          loading={loading}
+                          loading={isLoading}
                     />
                 }
             </div>

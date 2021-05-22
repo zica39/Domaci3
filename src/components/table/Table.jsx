@@ -27,7 +27,7 @@ const TableComponent = ({ data, onEditRow,onRowDelete}) => {
                     {Object.values(row).map((item, index) =>  <td key={index}>{item}</td>)}
 
                     <td><button className='btn btn-primary btn-sm' onClick={() =>onEditRow(row)}><Pencil/></button></td>
-                    <td><button className='btn btn-danger btn-sm' onClick={()=>onRowDelete(row)}><Trash/></button></td>
+                    <td><button className='btn btn-danger btn-sm' onClick={()=>onRowDelete(row.id)}><Trash/></button></td>
                             </tr>
             })
         }

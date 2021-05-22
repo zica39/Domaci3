@@ -1,23 +1,15 @@
 import axiosInstance from "./axios";
 import {getToken} from "../functions/tools";
 
-export const getBooks = (page,filter) => {
+export const getBooks = ({ queryKey }) => {
+    const [_key, { page, filter }] = queryKey;
+    void _key;
+    const params = {};
+    params.page = filter?0:page;
+    if(filter)params["isbn.contains"] = filter;
 
     return axiosInstance.get('/books',{
-        params:{
-            page:filter?0:page,
-            "isbn.contains":filter
-        },
-        headers:{'Authorization': getToken()}
-    });
-}
-
-export const getBooksCount = (filter) => {
-
-    return axiosInstance.get('/books/count',{
-        params:{
-            "isbn.contains":filter
-        },
+        params:params,
         headers:{'Authorization': getToken()}
     });
 }
