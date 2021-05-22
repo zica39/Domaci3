@@ -1,58 +1,85 @@
 import React, {useEffect, useState} from 'react';
 import {PlusCircle, Save, X} from 'react-bootstrap-icons';
 import {useHistory,useParams} from 'react-router-dom';
-import {generateFormData} from "../../../../functions/tools";
+import {formatDate, generateForm, generateFormData} from "../../../../functions/tools";
 import {createBook, deleteBook, getBook, updateBook} from "../../../../services/books";
 import book_model from "../../../../constants/book_model";
 import {useMutation} from "react-query";
+import {swalAlert} from "../../../../functions/tools";
+import {useForm} from "react-hook-form";
+
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from "yup";
 
 const Form = () => {
 
-    const [formData, setFormData] = useState(generateFormData(book_model));
-    const [disabled,setDisabled] = useState(false);
-    const[loading, setLoading] = useState(false);
+    const [isDisabled,setIsDisabled] = useState(false);
+    const[isLoading, setIsLoading] = useState(false);
 
     const history = useHistory();
     const { id } = useParams();
 
+    const schema = yup.object().shape({
+        publisherName: yup.string().required(),
+        isbn: yup.string().required(),
+        writerName: yup.string().required(),
+        publishedDate: yup.date().required(),
+        genre:yup.string().required()
+    });
+
+    const {register,formState: { errors }, handleSubmit,reset} = useForm({
+        mode: 'onSubmit',
+        reValidateMode: 'onChange',
+        resolver: yupResolver(schema),
+        defaultValues:generateFormData(book_model)
+    });
+
+    //console.log(errors);
     const createMutation = useMutation(createBook, {
         onSuccess: () => {
             history.push('/books');
+            swalAlert('success','Good job!','Book created successfully!').then();
+        },
+        onError: () => {
+            swalAlert('error','Oops...',createMutation.error);
+            setIsDisabled(false);
         }
     });
 
     const updateMutation = useMutation(updateBook, {
         onSuccess: () => {
             history.push('/books');
+            swalAlert('success','Good job!','Book updated successfully!').then();
+        },
+        onError: () =>{
+            swalAlert('error','Oops...', updateMutation.error);
+            setIsDisabled(false);
         }
     });
 
-    if(updateMutation.isError || createMutation.isError){
-        alert(createMutation.error || updateMutation.error);
-        setDisabled(false);
-    }
-
-
     useEffect(()=>{
         if(id) {
-            setLoading(true);
+            setIsLoading(true);
             getBook(id).then(response => {
-                //console.log(response.data);
-                setFormData(response.data);
-                setLoading(false);
+                //setFormData(response.data);
+                reset(response.data);
+
+                setIsLoading(false);
             }).catch(error => {
                 alert(error?.message);
             })
         }
     },[id]);
 
-    const onSave = () => {
-        setDisabled(true);
+    const onSave = (e) => {
+
+        e.publishedDate = formatDate(e.publishedDate);
+        setIsDisabled(true);
 
         if(id){
-            updateMutation.mutate(formData);
+            updateMutation.mutate(e);
         }else{
-            createMutation.mutate(formData);
+            createMutation.mutate(e);
         }
 
     }
@@ -65,70 +92,15 @@ const Form = () => {
         <button onClick={()=>onExit()} className="btn btn-sm mt-1 btn-outline-danger float-right"><X/></button>
         <div className='row my-3'>
             <div className="col-sm-10 offset-sm-1 col-md-6 offset-md-3">
-                {loading?
+                {isLoading?
                     <div className="spinner-border text-primary"/>:
                     <form>
                     <h4 className='mb-3'> {id?'Edit':'Create'} Book</h4>
-                    <div className="form-group" >
-                        <label htmlFor="isbn">isbn</label>
-                        <input type="text" className="form-control shadow-sm" id="isbn" aria-describedby="isbn"
-                               placeholder="Enter isbn"
-                               value={formData.isbn}
-                               onChange={(e) => setFormData(prevState => {
-                                   return{...prevState,'isbn':e.target.value}
-                               })}
-                        />
+                        {generateForm(book_model,register,errors)}
 
-                    </div>
-
-                    <div className="form-group" >
-                        <label htmlFor="writerName">writerName</label>
-                        <input type="text" className="form-control shadow-sm" id="writerName" aria-describedby="writerName"
-                               placeholder="Enter writerName"
-                               value={formData.writerName}
-                               onChange={(e) => setFormData(prevState => {
-                                   return{...prevState,'writerName':e.target.value}
-                               })}
-                        />
-                    </div>
-
-                    <div className="form-group" >
-                        <label htmlFor="publisherName">publisherName</label>
-                        <input type="text" className="form-control shadow-sm" id="publisherName" aria-describedby="publisherName"
-                               placeholder="Enter publisherName"
-                               value={formData.publisherName}
-                               onChange={(e) => setFormData(prevState => {
-                                   return{...prevState,'publisherName':e.target.value}
-                               })}
-                        />
-
-                    </div>
-
-                    <div className="form-group" >
-                        <label htmlFor="publishedDate">publishedDate</label>
-                        <input type="date" className="form-control shadow-sm" id="publishedDate" aria-describedby="publishedDate"
-                               placeholder="Enter publishedDate"
-                               value={formData.publishedDate}
-                               onChange={(e) => setFormData(prevState => {
-                                   return{...prevState,'publishedDate':e.target.value}
-                               })}
-                        />
-                    </div>
-
-                    <div className="form-group" >
-                        <label htmlFor="genre">genre</label>
-                        <input type="text" className="form-control shadow-sm" id="genre" aria-describedby="genre"
-                               placeholder="Enter genre"
-                               value={formData.genre}
-                               onChange={(e) => setFormData(prevState => {
-                                   return{...prevState,'genre':e.target.value}
-                               })}
-                        />
-                    </div>
-
-                    {disabled ? <div className="spinner-border"/> :
-                        <button type="button" className={`btn ${id ? 'btn-primary' : 'btn-success'} rounded`}
-                                onClick={() => onSave()}>{id ? <Save/> :
+                    {isDisabled ? <div className="spinner-border"/> :
+                        <button type="submit" className={`btn ${id ? 'btn-primary' : 'btn-success'} rounded`}
+                              onClick={handleSubmit(onSave)}>{id ? <Save/> :
                             <PlusCircle/>} {id ? 'Save' : 'Create'}</button>
                     }
                 </form>}

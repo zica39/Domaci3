@@ -2,7 +2,7 @@ import React from 'react';
 import "./Table.css";
 import Table from 'react-bootstrap/Table'
 import {Trash,Pencil} from 'react-bootstrap-icons';
-import {getHeaders} from "../../functions/tools";
+import {camelPad, getHeaders} from "../../functions/tools";
 
 const TableComponent = ({ data, onEditRow,onRowDelete}) => {
 
@@ -15,7 +15,7 @@ const TableComponent = ({ data, onEditRow,onRowDelete}) => {
                     {
                         Array.isArray(header) &&
                             header.map((item, index) => {
-                                return <th key={index}>{item}</th>
+                                return <th key={index}>{camelPad(item)}</th>
                             })
                     }
                 </tr>

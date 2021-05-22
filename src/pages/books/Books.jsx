@@ -5,7 +5,7 @@ import {useHistory} from 'react-router-dom';
 import {getBooks, deleteBook} from "../../services/books";
 import {useMutation, useQuery, useQueryClient} from "react-query";
 import useDebounce from '../../customHooks/useDebounce';
-import Swal from "sweetalert2";
+import {swalAlert} from "../../functions/tools";
 
 const Books = () => {
 
@@ -25,11 +25,12 @@ const Books = () => {
 
     const deleteMutation = useMutation(deleteBook, {
         onSuccess: () => {
-            history.push('/books');
             queryClient.invalidateQueries('books');
+
+            swalAlert('success','Good job!','Item deleted successfully!');
+            setDeleteId(0);
         }
     })
-
 
     const onEditRow = (row) => {
         history.push('/books/edit/'+row.id);
@@ -43,28 +44,17 @@ const Books = () => {
 
         deleteMutation.mutate(id);
 
-        Swal.fire(
-            'Good job!',
-            'Item deleted successfully!',
-            'success'
-        );
-
         if(deleteMutation.isError){
+            swalAlert('error','Oops...',deleteMutation.error);
             setDeleteId(0);
-            alert(deleteMutation.error);
         }
-    }
 
+
+    }
 
     if(isError){
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: error
-        })
+        swalAlert('error','Oops...',error);
     }
-
-
 
     return<div className="container-fluid">
             <div>

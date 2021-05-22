@@ -16,7 +16,7 @@ const book_model = [
     },
     {
         name: 'publishedDate',
-        type: 'text',
+        type: 'date',
         default: '',
     },
     {
