@@ -2,34 +2,48 @@ import React,{useState} from "react";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import {useHistory} from "react-router-dom";
-import {saveToStorage} from "../../functions/tools";
+import {saveToStorage, swalAlert} from "../../functions/tools";
 import { Lock,BoxArrowRight } from 'react-bootstrap-icons';
 import {login} from '../../services/auth';
 import {Link} from 'react-router-dom'
+import * as yup from "yup";
+import {useForm} from "react-hook-form";
+import {yupResolver} from "@hookform/resolvers/yup";
+
 
 const Login = () => {
     const history = useHistory();
-    const[loginData,setLoginData] = useState({
-        username:'',
-        password:'',
-        rememberMe: false
-    });
     const[disabled,setDisabled] = useState(false);
 
+    const schema = yup.object().shape({
+        username: yup.string().required(),
+        password: yup.string().required(),
+    });
 
-    const onSubmit = () => {
+
+    const {register,formState: { errors }, handleSubmit,reset} = useForm({
+        mode: 'onSubmit',
+        reValidateMode: 'onChange',
+        resolver: yupResolver(schema),
+        defaultValues:{
+            username:'',
+            password:'',
+            rememberMe: false
+        }
+    });
+    const onSubmit = (data) => {
 
         setDisabled(true);
-        login(loginData).then(function(response){
+        login(data).then(function(response){
 
             saveToStorage('id_token',response?.data?.id_token);
-            saveToStorage('username',loginData.username);
+            saveToStorage('username',data.username);
             saveToStorage('role','admin');
 
             history.push('/');
 
         }).catch(function (error) {
-            alert(error?.response?.data?.detail);
+            swalAlert('error', 'Error', error?.response?.data?.detail);
             setDisabled(false);
         });
 
@@ -43,41 +57,25 @@ const Login = () => {
         <Form.Group controlId="formBasicEmail">
             <Form.Label>Username</Form.Label>
             <Form.Control type="text" placeholder="Enter username" className="w-75 m-auto"
-                          value={loginData.username}
-                          onChange={(e) => setLoginData(prevState => {
-                              return{
-                                  ...prevState,
-                                  'username': e.target.value
-                              }
-                          })}
+                  {...register('username')}
             />
+            <small className="text-danger text-left"> {errors?.username?.message}</small>
         </Form.Group>
 
         <Form.Group controlId="formBasicPassword">
             <Form.Label>Password</Form.Label>
             <Form.Control type="password" placeholder="Password"  className="w-75 m-auto"
-                          value={loginData.password}
-                          onChange={(e) => setLoginData(prevState => {
-                              return{
-                                  ...prevState,
-                                  'password': e.target.value
-                              }
-                          })}
+                  {...register('password')}
             />
+            <small className="text-danger text-left"> {errors?.password?.message}</small>
         </Form.Group>
             <Form.Group controlId="formBasicCheckbox">
                 <Form.Check type="checkbox" label="Remember Me"
-                            value={loginData.rememberMe}
-                            onChange={(e) => setLoginData(prevState => {
-                                return{
-                                    ...prevState,
-                                    'rememberMe': e.target.value
-                                }
-                            })}
+                            {...register('rememberMe')}
                 />
             </Form.Group>
 
-        <Button disabled={disabled} variant="primary" type="button" onClick={() => onSubmit()}>
+        <Button disabled={disabled} variant="primary" type="submit" onClick={handleSubmit(onSubmit)}>
              {disabled?
             <div className="spinner-border"/>:
             <span>LogIn <BoxArrowRight/></span>}

@@ -4,7 +4,7 @@ export const login = (data) => {
     return axiosInstance.post('/authenticate',data);
 }
 
-export const register = (data) => {
+export const registerUser = (data) => {
     return axiosInstance.post('/register',data);
 }
 
