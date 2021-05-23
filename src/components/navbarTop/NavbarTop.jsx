@@ -1,7 +1,10 @@
 import React from 'react';
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav';
-import Form from "react-bootstrap/Form";
+//import DropdownButton from 'react-bootstrap/DropdownButton'
+//import Dropdown from 'react-bootstrap/Dropdown';
+//import Form from "react-bootstrap/Form";
+import DropdownElement from "../Dropdown/Dropdown";
 import {Link, useHistory,useRouteMatch} from 'react-router-dom';
 import {loadFromStorage,destroyData} from "../../functions/tools";
 import { DoorClosed,Person,Book,Film } from 'react-bootstrap-icons';
@@ -23,16 +26,9 @@ const NavbarTop = () => {
                 <Nav.Link><Link className={(data.path.startsWith('/books'))?'':'text-light'} to="/books"><Book/> Books</Link></Nav.Link>
                 <Nav.Link><Link className={(data.path.startsWith('/people'))?'':'text-light'} to="/people"><Person/> People</Link></Nav.Link>
             </Nav>
-            <Form inline>
-                <h5 className="text-light mt-auto">({loadFromStorage('username')})</h5>
-                <Nav.Link className="text-light" onClick={() => {
-                    destroyData('role');
-                    destroyData('id_token');
-                    history.push("/login");
-                }}><DoorClosed/><small>Log out</small></Nav.Link>
 
-            </Form>
         </Navbar.Collapse>
+        <DropdownElement/>
     </Navbar>
 }
 
