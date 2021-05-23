@@ -4,6 +4,7 @@ import {Switch} from 'react-router-dom';
 import {QueryClient,QueryClientProvider} from 'react-query';
 
 import Login from "./pages/login/Login";
+import Register from "./pages/register/Register";
 import PrivateRoute from "./privateRoute/PrivateRoute";
 import Welcome from "./components/welcome/Welcome";
 
@@ -38,6 +39,7 @@ function App() {
             <PrivateRoute path="/people/edit/:id" exact component={PeopleForm} isPrivate/>
 
             <PrivateRoute path="/login" component={Login}/>
+            <PrivateRoute path="/register" component={Register}/>
             <PrivateRoute path="/" component={Welcome} isPrivate/>
         </Switch>
     </div>

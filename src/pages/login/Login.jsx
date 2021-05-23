@@ -5,6 +5,7 @@ import {useHistory} from "react-router-dom";
 import {saveToStorage} from "../../functions/tools";
 import { Lock,BoxArrowRight } from 'react-bootstrap-icons';
 import {login} from '../../services/auth';
+import {Link} from 'react-router-dom'
 
 const Login = () => {
     const history = useHistory();
@@ -82,6 +83,9 @@ const Login = () => {
             <span>LogIn <BoxArrowRight/></span>}
         </Button>
     </Form>
+            <div className="footer mt-3">
+                <p>Don't have an Account! <Link to="register">Sign Up Here</Link></p>
+            </div>
     </div>
     </div>
 }

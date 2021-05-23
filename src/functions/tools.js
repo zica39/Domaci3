@@ -1,5 +1,6 @@
 import Swal from "sweetalert2";
 import React from "react";
+import {useHistory} from 'react-router-dom';
 
 export const saveToStorage = (name,data) =>{
     localStorage.setItem(name,JSON.stringify(data));
