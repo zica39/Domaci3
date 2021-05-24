@@ -34,11 +34,20 @@ export const generateForm = (model,register,errors) =>{
         output.push(
             <div key={index} className="form-group" >
                 <label htmlFor={field.name} className='float-left font-weight-bolder'>{camelPad(field.name)}</label>
-                <input type={field.type} className="form-control shadow-sm" id={field.name} aria-describedby={field.name}
+                {field.type !== 'select'?
+                    <input type={field.type} className="form-control shadow-sm" id={field.name} aria-describedby={field.name}
                        {...register(field.name)}
                        placeholder={"Enter "+camelPad(field.name)}
 
-                />
+                />:
+                    <select  className="form-control shadow-sm" id={field.name} aria-describedby={field.name}
+                           {...register(field.name)}
+                    >
+                        <option value="">-Select gander-</option>
+                        {field.options.map((item,index)=><option key={index}>{item}</option>)}
+                    </select>
+
+                }
                 <small className="text-danger text-left"> {errors[field.name]?.message}</small>
 
             </div>

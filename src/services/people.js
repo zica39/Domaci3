@@ -1,23 +1,15 @@
 import axiosInstance from "./axios";
 import {getToken} from "../functions/tools";
 
-export const getPeople = (page,filter) => {
+export const getPeople = ({ queryKey }) => {
+    const [_key, { page, filter }] = queryKey;
+    void _key;
+    const params = {};
+    params.page = filter?0:page;
+    if(filter)params["firstName.contains"] = filter;
 
     return axiosInstance.get('/people',{
-        params:{
-            page:filter?0:page,
-            "firstName.contains":filter
-        },
-        headers:{'Authorization': getToken()}
-    });
-}
-
-export const getPeopleCount = (filter) => {
-
-    return axiosInstance.get('/people/count',{
-        params:{
-            "firstName.contains":filter
-        },
+        params:params,
         headers:{'Authorization': getToken()}
     });
 }
@@ -43,7 +35,7 @@ export const createPerson = (data) => {
     });
 }
 
-export const updatePerson= (data) => {
+export const updatePerson = (data) => {
 
     return axiosInstance.put('/people',data,{
         headers:{'Authorization': getToken()},

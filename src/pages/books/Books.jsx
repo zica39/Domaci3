@@ -1,11 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import Grid from "../../components/grid/Grid";
-import DeleteModal from "../../components/DeleteModal/DeleteModal";
 import {getBook,updateBook,createBook,getBooks, deleteBook} from "../../services/books";
 import {useMutation, useQuery, useQueryClient} from "react-query";
 import useDebounce from '../../customHooks/useDebounce';
 import {swalAlert} from "../../functions/tools";
 import FormModal from "../../components/formModal/FormModal";
+import DeleteModal from "../../components/DeleteModal/DeleteModal";
 import {book_model,book_schema} from "../../constants/book_model";
 
 const Books = () => {
@@ -33,11 +33,11 @@ const Books = () => {
     })
 
     const onEditRow = (row) => {
-        setOpenModal({open:true,action: 'Edit',id: row.id,title: 'Book'});
+        setOpenModal({open:true,action: 'Edit',id: row.id,title: 'Book',key:'books'});
     }
 
     const onNewRow = ()=>{
-        setOpenModal({open:true,action: 'Create', title:'Book'});
+        setOpenModal({open:true,action: 'Create', title:'Book',key:'books'});
 
     }
 

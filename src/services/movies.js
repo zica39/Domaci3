@@ -1,23 +1,15 @@
 import axiosInstance from "./axios";
 import {getToken} from "../functions/tools";
 
-export const getMovies = (page,filter) => {
+export const getMovies = ({ queryKey }) => {
+    const [_key, { page, filter }] = queryKey;
+    void _key;
+    const params = {};
+    params.page = filter?0:page;
+    if(filter)params["name.contains"] = filter;
 
     return axiosInstance.get('/movies',{
-        params:{
-            page:filter?0:page,
-            "name.contains":filter
-        },
-        headers:{'Authorization': getToken()}
-    });
-}
-
-export const getMoviesCount = (filter) => {
-
-    return axiosInstance.get('/movies/count',{
-        params:{
-            "name.contains":filter
-        },
+        params:params,
         headers:{'Authorization': getToken()}
     });
 }
@@ -43,7 +35,7 @@ export const createMovie = (data) => {
     });
 }
 
-export const updateMovie= (data) => {
+export const updateMovie = (data) => {
 
     return axiosInstance.put('/movies',data,{
         headers:{'Authorization': getToken()},

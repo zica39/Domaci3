@@ -3,7 +3,7 @@ import {PlusCircle, Save, X} from 'react-bootstrap-icons';
 import {useHistory,useParams} from 'react-router-dom';
 import {generateFormData} from "../../../../functions/tools";
 import {createMovie,getMovie,updateMovie} from "../../../../services/movies";
-import movie_model from "../../../../constants/movie_model";
+import movie_model from "../../../../constants/movies";
 
 const Form = () => {
 

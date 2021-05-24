@@ -3,7 +3,7 @@ import {PlusCircle, Save, X} from 'react-bootstrap-icons';
 import {useHistory,useParams} from 'react-router-dom';
 import {generateFormData} from "../../../../functions/tools";
 import {createPerson,getPerson, updatePerson} from "../../../../services/people";
-import person_model from "../../../../constants/person_model";
+import person_model from "../../../../constants/people";
 
 const Form = () => {
 

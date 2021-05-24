@@ -36,7 +36,7 @@ const FormModal = ({openModal,setOpenModal,model,schema,getItem,createItem,updat
             //history.push('/books');
             setIsDisabled(false);
             setOpenModal({});
-            swalAlert('success','Good job!',openModal.title+' created successfully!').then(()=>queryClient.invalidateQueries('books'));
+            swalAlert('success','Good job!',openModal.title+' created successfully!').then(()=>queryClient.invalidateQueries(openModal.key));
         },
         onError: () => {
             swalAlert('error','Oops...',createMutation.error);
@@ -48,7 +48,7 @@ const FormModal = ({openModal,setOpenModal,model,schema,getItem,createItem,updat
         onSuccess: () => {
             setIsDisabled(false);
             setOpenModal({});
-            swalAlert('success','Good job!',openModal.title+' updated successfully!').then(()=>queryClient.invalidateQueries('books'));
+            swalAlert('success','Good job!',openModal.title+' updated successfully!').then(()=>queryClient.invalidateQueries(openModal.key));
         },
         onError: () =>{
             swalAlert('error','Oops...', updateMutation.error);
@@ -72,7 +72,9 @@ const FormModal = ({openModal,setOpenModal,model,schema,getItem,createItem,updat
 
     const onSave = (e) => {
 
-        e.publishedDate = formatDate(e.publishedDate);
+        if(e.publishedDate)
+            e.publishedDate = formatDate(e.publishedDate);
+
         setIsDisabled(true);
 
         if(openModal.id){
