@@ -1,4 +1,6 @@
-const book_model = [
+import * as yup from "yup";
+
+export const book_model = [
     {
         name: 'isbn',
         type: 'text',
@@ -24,6 +26,13 @@ const book_model = [
         type: 'text',
         default: '',
     }
-    ]
+    ];
 
-export default book_model;
+export const book_schema = yup.object().shape({
+    publisherName: yup.string().required(),
+    isbn: yup.string().required(),
+    writerName: yup.string().required(),
+    publishedDate: yup.date().required(),
+    genre:yup.string().required()
+});
+

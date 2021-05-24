@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import Grid from "../../components/grid/Grid";
 import DeleteModal from "../../components/DeleteModal/DeleteModal";
-import {useHistory} from 'react-router-dom';
-import {getBooks, deleteBook} from "../../services/books";
+import {getBook,updateBook,createBook,getBooks, deleteBook} from "../../services/books";
 import {useMutation, useQuery, useQueryClient} from "react-query";
 import useDebounce from '../../customHooks/useDebounce';
 import {swalAlert} from "../../functions/tools";
 import FormModal from "../../components/formModal/FormModal";
+import {book_model,book_schema} from "../../constants/book_model";
 
 const Books = () => {
 
@@ -27,19 +27,17 @@ const Books = () => {
         onSuccess: () => {
             queryClient.invalidateQueries('books');
 
-            swalAlert('success','Good job!','Item deleted successfully!');
+            swalAlert('success','Good job!','Book deleted successfully!');
             setDeleteId(0);
         }
     })
 
     const onEditRow = (row) => {
-       // history.push('/books/edit/'+row.id);
-        setOpenModal({open:true,action: 'create',id: row.id});
+        setOpenModal({open:true,action: 'Edit',id: row.id,title: 'Book'});
     }
 
     const onNewRow = ()=>{
-        //history.push('/books/create');
-        setOpenModal({open:true,action: 'edit'});
+        setOpenModal({open:true,action: 'Create', title:'Book'});
 
     }
 
@@ -78,8 +76,16 @@ const Books = () => {
                     />
                 }
             </div>
-            {deleteId?<DeleteModal id={deleteId} setDeleteId={setDeleteId} removeRow={removeRow} />:''}
-            {openModal.open?<FormModal openModal={openModal} setOpenModal={setOpenModal} />:''}
+            {deleteId?<DeleteModal id={deleteId} setDeleteId={setDeleteId} removeRow={removeRow} title='book' />:''}
+            {openModal.open?<FormModal
+                openModal={openModal}
+                setOpenModal={setOpenModal}
+                model={book_model}
+                schema={book_schema}
+                createItem={createBook}
+                updateItem={updateBook}
+                getItem={getBook}
+            />:''}
 
         </div>
 

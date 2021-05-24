@@ -1,15 +1,12 @@
 import{Modal,Button} from "react-bootstrap";
-import {PlusCircle, Save, Trash, Pencil} from "react-bootstrap-icons";
+import {PlusCircle, Save, Pencil} from "react-bootstrap-icons";
 import React, {useEffect, useState} from "react";
-import * as yup from "yup";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {formatDate, generateForm, generateFormData, swalAlert} from "../../functions/tools";
-import book_model from "../../constants/book_model";
 import {useMutation, useQueryClient} from "react-query";
-import {createBook, getBook, updateBook} from "../../services/books";
 
-const FormModal = ({openModal,setOpenModal}) => {
+const FormModal = ({openModal,setOpenModal,model,schema,getItem,createItem,updateItem}) => {
     const [show, setShow] = useState(true);
     const [isDisabled,setIsDisabled] = useState(false);
 
@@ -24,28 +21,22 @@ const FormModal = ({openModal,setOpenModal}) => {
     const queryClient = useQueryClient();
 
 
-    const schema = yup.object().shape({
-        publisherName: yup.string().required(),
-        isbn: yup.string().required(),
-        writerName: yup.string().required(),
-        publishedDate: yup.date().required(),
-        genre:yup.string().required()
-    });
+
 
     const {register,formState: { errors }, handleSubmit,reset} = useForm({
         mode: 'onSubmit',
         reValidateMode: 'onChange',
         resolver: yupResolver(schema),
-        defaultValues:generateFormData(book_model)
+        defaultValues:generateFormData(model)
     });
 
     //console.log(errors);
-    const createMutation = useMutation(createBook, {
+    const createMutation = useMutation(createItem, {
         onSuccess: () => {
             //history.push('/books');
             setIsDisabled(false);
             setOpenModal({});
-            swalAlert('success','Good job!','Book created successfully!').then(()=>queryClient.invalidateQueries('books'));
+            swalAlert('success','Good job!',openModal.title+' created successfully!').then(()=>queryClient.invalidateQueries('books'));
         },
         onError: () => {
             swalAlert('error','Oops...',createMutation.error);
@@ -53,11 +44,11 @@ const FormModal = ({openModal,setOpenModal}) => {
         }
     });
 
-    const updateMutation = useMutation(updateBook, {
+    const updateMutation = useMutation(updateItem, {
         onSuccess: () => {
             setIsDisabled(false);
             setOpenModal({});
-            swalAlert('success','Good job!','Book updated successfully!').then(()=>queryClient.invalidateQueries('books'));
+            swalAlert('success','Good job!',openModal.title+' updated successfully!').then(()=>queryClient.invalidateQueries('books'));
         },
         onError: () =>{
             swalAlert('error','Oops...', updateMutation.error);
@@ -68,7 +59,7 @@ const FormModal = ({openModal,setOpenModal}) => {
     useEffect(()=>{
         if(openModal?.id) {
             setIsLoading(true);
-            getBook(openModal?.id).then(response => {
+            getItem(openModal?.id).then(response => {
                 //setFormData(response.data);
                 reset(response.data);
 
@@ -98,13 +89,13 @@ const FormModal = ({openModal,setOpenModal}) => {
             <Modal show={show} onHide={handleClose} animation={false}>
                 <form>
                 <Modal.Header closeButton>
-                    <Modal.Title>{openModal.id?<Pencil/>:<PlusCircle/>}{openModal.id?' Edit':' Create'} Book</Modal.Title>
+                    <Modal.Title>{openModal.id?<Pencil/>:<PlusCircle/>} {openModal.action} {openModal.title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                             <div className="container-fluid">
                                 {isLoading?
                                     <div className='d-flex justify-content-center'><div className="spinner-border text-primary"/></div>:
-                                        generateForm(book_model,register,errors)
+                                        generateForm(model,register,errors)
                                    }
                             </div>
                 </Modal.Body>
@@ -115,7 +106,7 @@ const FormModal = ({openModal,setOpenModal}) => {
                         <Button variant="secondary" onClick={handleClose}> Cancel</Button>
                         <button type="submit" className={`btn ${openModal.id ? 'btn-primary' : 'btn-success'} rounded`}
                                 onClick={handleSubmit(onSave)}>{openModal.id ? <Save/> :
-                            <PlusCircle/>} {openModal.id ? 'Save' : 'Create'}</button>
+                            <PlusCircle/>} {openModal.action}</button>
                     </>
                     }
                 </Modal.Footer>

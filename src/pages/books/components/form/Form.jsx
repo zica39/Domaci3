@@ -3,7 +3,7 @@ import {PlusCircle, Save, X} from 'react-bootstrap-icons';
 import {useHistory,useParams} from 'react-router-dom';
 import {formatDate, generateForm, generateFormData} from "../../../../functions/tools";
 import {createBook, deleteBook, getBook, updateBook} from "../../../../services/books";
-import book_model from "../../../../constants/book_model";
+import book_model from "../../../../constants/books";
 import {useMutation} from "react-query";
 import {swalAlert} from "../../../../functions/tools";
 import {useForm} from "react-hook-form";
