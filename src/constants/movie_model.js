@@ -2,6 +2,11 @@ import * as yup from "yup";
 
 export const movie_model = [
     {
+        name: 'name',
+        type: 'text',
+        default: '',
+    },
+    {
         name: 'directorName',
         type: 'text',
         default: '',
@@ -9,11 +14,6 @@ export const movie_model = [
     {
         name: 'duration',
         type: 'number',
-        default: '',
-    },
-    {
-        name: 'name',
-        type: 'text',
         default: '',
     },
     {

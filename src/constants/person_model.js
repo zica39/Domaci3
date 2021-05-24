@@ -2,16 +2,6 @@ import * as yup from "yup";
 
 export const person_model = [
     {
-        name: 'age',
-        type: 'number',
-        default: '',
-    },
-    {
-        name: 'dateOfBirth',
-        type: 'date',
-        default: '',
-    },
-    {
         name: 'firstName',
         type: 'text',
         default: '',
@@ -19,6 +9,16 @@ export const person_model = [
     {
         name: 'lastName',
         type: 'text',
+        default: '',
+    },
+    {
+        name: 'age',
+        type: 'number',
+        default: '',
+    },
+    {
+        name: 'dateOfBirth',
+        type: 'date',
         default: '',
     },
     {

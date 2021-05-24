@@ -20,9 +20,6 @@ const FormModal = ({openModal,setOpenModal,model,schema,getItem,createItem,updat
     const[isLoading, setIsLoading] = useState(false);
     const queryClient = useQueryClient();
 
-
-
-
     const {register,formState: { errors }, handleSubmit,reset} = useForm({
         mode: 'onSubmit',
         reValidateMode: 'onChange',
@@ -30,10 +27,8 @@ const FormModal = ({openModal,setOpenModal,model,schema,getItem,createItem,updat
         defaultValues:generateFormData(model)
     });
 
-    //console.log(errors);
     const createMutation = useMutation(createItem, {
         onSuccess: () => {
-            //history.push('/books');
             setIsDisabled(false);
             setOpenModal({});
             swalAlert('success','Good job!',openModal.title+' created successfully!').then(()=>queryClient.invalidateQueries(openModal.key));
@@ -60,15 +55,13 @@ const FormModal = ({openModal,setOpenModal,model,schema,getItem,createItem,updat
         if(openModal?.id) {
             setIsLoading(true);
             getItem(openModal?.id).then(response => {
-                //setFormData(response.data);
                 reset(response.data);
-
                 setIsLoading(false);
             }).catch(error => {
                 alert(error?.message);
             })
         }
-    },[openModal?.id]);
+    },[openModal?.id,getItem,reset]);
 
     const onSave = (e) => {
 
@@ -84,7 +77,6 @@ const FormModal = ({openModal,setOpenModal,model,schema,getItem,createItem,updat
         }
 
     }
-
 
     return (
         <>

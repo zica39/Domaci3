@@ -21,7 +21,7 @@ const Login = () => {
     });
 
 
-    const {register,formState: { errors }, handleSubmit,reset} = useForm({
+    const {register,formState: { errors }, handleSubmit} = useForm({
         mode: 'onSubmit',
         reValidateMode: 'onChange',
         resolver: yupResolver(schema),

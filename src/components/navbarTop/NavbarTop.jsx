@@ -1,17 +1,12 @@
 import React from 'react';
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav';
-//import DropdownButton from 'react-bootstrap/DropdownButton'
-//import Dropdown from 'react-bootstrap/Dropdown';
-//import Form from "react-bootstrap/Form";
 import DropdownElement from "../Dropdown/Dropdown";
-import {Link, useHistory,useRouteMatch} from 'react-router-dom';
-import {loadFromStorage,destroyData} from "../../functions/tools";
-import { DoorClosed,Person,Book,Film } from 'react-bootstrap-icons';
+import {Link,useRouteMatch} from 'react-router-dom';
+import { Person,Book,Film } from 'react-bootstrap-icons';
 import logo from './logo192.png';
 
 const NavbarTop = () => {
-    const history = useHistory();
     const data = useRouteMatch();
 
     return <Navbar fixed="top" collapseOnSelect expand="lg" bg="dark" variant="dark">
