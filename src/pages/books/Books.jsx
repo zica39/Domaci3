@@ -6,6 +6,7 @@ import {getBooks, deleteBook} from "../../services/books";
 import {useMutation, useQuery, useQueryClient} from "react-query";
 import useDebounce from '../../customHooks/useDebounce';
 import {swalAlert} from "../../functions/tools";
+import FormModal from "../../components/formModal/FormModal";
 
 const Books = () => {
 
@@ -14,8 +15,7 @@ const Books = () => {
 
     const[page,setPage] = useState(0);
     const[deleteId,setDeleteId] = useState(0);
-
-    const history = useHistory();
+    const[openModal,setOpenModal] = useState({});
 
     const  label = 'book';
 
@@ -33,11 +33,14 @@ const Books = () => {
     })
 
     const onEditRow = (row) => {
-        history.push('/books/edit/'+row.id);
+       // history.push('/books/edit/'+row.id);
+        setOpenModal({open:true,action: 'create',id: row.id});
     }
 
     const onNewRow = ()=>{
-        history.push('/books/create');
+        //history.push('/books/create');
+        setOpenModal({open:true,action: 'edit'});
+
     }
 
     const removeRow = (id) => {
@@ -76,6 +79,8 @@ const Books = () => {
                 }
             </div>
             {deleteId?<DeleteModal id={deleteId} setDeleteId={setDeleteId} removeRow={removeRow} />:''}
+            {openModal.open?<FormModal openModal={openModal} setOpenModal={setOpenModal} />:''}
+
         </div>
 
 }
