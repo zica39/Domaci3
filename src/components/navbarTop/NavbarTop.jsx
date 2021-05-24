@@ -2,8 +2,8 @@ import React from 'react';
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav';
 import DropdownElement from "../Dropdown/Dropdown";
-import {Link,useRouteMatch} from 'react-router-dom';
-import { Person,Book,Film } from 'react-bootstrap-icons';
+import {Link, useRouteMatch} from 'react-router-dom';
+import {Person, Book, Film} from 'react-bootstrap-icons';
 import logo from './logo192.png';
 
 const NavbarTop = () => {
@@ -21,9 +21,8 @@ const NavbarTop = () => {
                 <Nav.Link><Link className={(data.path.startsWith('/books'))?'':'text-light'} to="/books"><Book/> Books</Link></Nav.Link>
                 <Nav.Link><Link className={(data.path.startsWith('/people'))?'':'text-light'} to="/people"><Person/> People</Link></Nav.Link>
             </Nav>
-
+            <DropdownElement/>
         </Navbar.Collapse>
-        <DropdownElement/>
     </Navbar>
 }
 

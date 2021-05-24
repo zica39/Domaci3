@@ -1,5 +1,5 @@
-import{Modal,Button} from "react-bootstrap";
-import {PlusCircle, Save, Pencil} from "react-bootstrap-icons";
+import {Modal,Button} from "react-bootstrap";
+import {PlusCircle, Pencil} from "react-bootstrap-icons";
 import React, {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
@@ -58,7 +58,7 @@ const FormModal = ({openModal,setOpenModal,model,schema,getItem,createItem,updat
                 reset(response.data);
                 setIsLoading(false);
             }).catch(error => {
-                alert(error?.message);
+                swalAlert('error','Oops...', error?.message);
             })
         }
     },[openModal?.id,getItem,reset]);
@@ -99,7 +99,7 @@ const FormModal = ({openModal,setOpenModal,model,schema,getItem,createItem,updat
                         <>
                         <Button variant="secondary" onClick={handleClose}> Cancel</Button>
                         <button type="submit" className={`btn ${openModal.id ? 'btn-primary' : 'btn-success'} rounded`}
-                                onClick={handleSubmit(onSave)}>{openModal.id ? <Save/> :
+                                onClick={handleSubmit(onSave)}>{openModal.id ? <Pencil/> :
                             <PlusCircle/>} {openModal.action}</button>
                     </>
                     }

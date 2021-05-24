@@ -20,7 +20,6 @@ const Login = () => {
         password: yup.string().required(),
     });
 
-
     const {register,formState: { errors }, handleSubmit} = useForm({
         mode: 'onSubmit',
         reValidateMode: 'onChange',

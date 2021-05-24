@@ -19,18 +19,18 @@ function App() {
 
   return (
       <QueryClientProvider client={queryClient}>
-    <div className="App">
-        <Switch>
-            <PrivateRoute path="/movies" exact component={Movies} isPrivate/>
-            <PrivateRoute path="/books" exact component={Books} isPrivate/>
-            <PrivateRoute path="/people" exact component={People} isPrivate/>
+        <div className="App">
+            <Switch>
+                <PrivateRoute path="/movies" exact component={Movies} isPrivate/>
+                <PrivateRoute path="/books" exact component={Books} isPrivate/>
+                <PrivateRoute path="/people" exact component={People} isPrivate/>
 
-            <PrivateRoute path="/login" component={Login}/>
-            <PrivateRoute path="/register" component={Register}/>
-            <PrivateRoute path="/" component={Welcome} isPrivate/>
-        </Switch>
-    </div>
-         </QueryClientProvider>
+                <PrivateRoute path="/login" component={Login}/>
+                <PrivateRoute path="/register" component={Register}/>
+                <PrivateRoute path="/" component={Welcome} isPrivate/>
+            </Switch>
+        </div>
+      </QueryClientProvider>
   );
 }
 
