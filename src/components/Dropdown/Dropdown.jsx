@@ -15,7 +15,7 @@ const DropdownElement = () => {
         });
     },[]);
 
-    return <DropdownButton eventKey={3} variant="dark" menuAlign={{md: 'right'}} title={loadFromStorage('username')}>
+    return <DropdownButton variant="dark" menuAlign={{md: 'right'}} title={loadFromStorage('username')}>
         <Dropdown.Item disabled={true}><Person/> {userData?.firstName + ' '+ userData?.lastName}</Dropdown.Item>
         <Dropdown.Item disabled={true}><At/> {userData?.email}</Dropdown.Item>
         <Dropdown.Item onClick={() => {
