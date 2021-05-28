@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{Suspense} from 'react';
 import {Route,useHistory,useLocation} from 'react-router-dom';
 import Forbidden from "../pages/forbidden/Forbidden";
 import AuthLayout from "../components/layout/AuthLayout";
@@ -14,10 +14,17 @@ const PrivateRoute = ({component: Component, isPrivate, ...rest}) => {
 	if(!loadFromStorage('role') && isPrivate && location.pathname === '/')history.push('/login');
 
     return <Route {...rest} component={() => {
-        if(isPrivate && loadFromStorage('role')) return <Layout><Component {...rest}/></Layout>;
+        if(isPrivate && loadFromStorage('role')) return <Layout>
+            <Suspense fallback={<div>Loading...</div>}>
+                <Component {...rest}/>
+        </Suspense></Layout>;
         else if( isPrivate &&  !loadFromStorage('role') )  return <Forbidden/>;
         else if(loadFromStorage('role') && !isPrivate) return <></>;
-        else return <Layout><Component {...rest}/></Layout>;
+        else return <Layout>
+                <Suspense fallback={<div>Loading...</div>}>
+                <Component {...rest}/>
+            </Suspense>
+        </Layout>;
     }}/>
 }
 

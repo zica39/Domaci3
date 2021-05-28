@@ -2,16 +2,17 @@ import './App.css';
 import React from 'react';
 import {Switch} from 'react-router-dom';
 import {QueryClient,QueryClientProvider} from 'react-query';
+import {LazyLoad} from "./functions/tools";
 
-import Login from "./pages/login/Login";
-import Register from "./pages/register/Register";
 import PrivateRoute from "./privateRoute/PrivateRoute";
-import Welcome from "./components/welcome/Welcome";
 
-import Books from "./pages/books/Books";
-import People from "./pages/people/People";
-import Movies from "./pages/movies/Movies";
+const Login = LazyLoad('login/Login');
+const Register = LazyLoad('register/Register');
+const WelcomePage = LazyLoad('welcomePage/WelcomePage');
 
+const Books = LazyLoad('books/Books');
+const People = LazyLoad('people/People');
+const Movies = LazyLoad('movies/Movies');
 
 function App() {
 
@@ -27,7 +28,7 @@ function App() {
 
                 <PrivateRoute path="/login" component={Login}/>
                 <PrivateRoute path="/register" component={Register}/>
-                <PrivateRoute path="/" component={Welcome} isPrivate/>
+                <PrivateRoute path="/" component={WelcomePage} isPrivate/>
             </Switch>
         </div>
       </QueryClientProvider>

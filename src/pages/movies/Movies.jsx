@@ -14,13 +14,14 @@ const Books = () => {
     const debouncedValue = useDebounce(filter, 200);
 
     const[page,setPage] = useState(0);
+    const[pageSize,setPageSize] = useState(10);
     const[deleteId,setDeleteId] = useState(0);
     const[openModal,setOpenModal] = useState({});
 
     const  label = 'movie';
 
     const queryClient = useQueryClient();
-    const { isLoading, isError, data, error } = useQuery(['movies',{page:page,filter:debouncedValue}],  getMovies);
+    const { isLoading, isError, data, error } = useQuery(['movies',{page:page,filter:debouncedValue,size:pageSize}],  getMovies);
 
 
     const deleteMutation = useMutation(deleteMovie, {
@@ -69,6 +70,8 @@ const Books = () => {
                       itemsCount={parseInt(data?.headers['x-total-count'])}
                       setPage={setPage}
                       page={page}
+                      pageSize={pageSize}
+                      setPageSize={setPageSize}
 
                       filter={filter}
                       setFilter={setFilter}

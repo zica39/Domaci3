@@ -2,10 +2,11 @@ import axiosInstance from "./axios";
 import {getToken} from "../functions/tools";
 
 export const getBooks = ({ queryKey }) => {
-    const [_key, { page, filter }] = queryKey;
+    const [_key, { page, filter,size }] = queryKey;
     void _key;
     const params = {};
     params.page = filter?0:page;
+    params.size = size;
     if(filter)params["isbn.contains"] = filter;
 
     return axiosInstance.get('/books',{

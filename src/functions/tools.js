@@ -1,5 +1,5 @@
 import Swal from "sweetalert2";
-import React from "react";
+import React,{Suspense} from "react";
 
 export const saveToStorage = (name,data) =>{
     localStorage.setItem(name,JSON.stringify(data));
@@ -88,4 +88,14 @@ export const camelPad = (str) => {
     .replace(/^./, function(str){ return str.toUpperCase(); })
     // Remove any white space left around the word
     .trim();
+}
+
+export const LazyLoad = (path) => {
+    return React.lazy(()=>import('../pages/'+path));
+}
+
+export const suspense = ({Component}) => {
+    return <Suspense fallback={<div>Loading...</div>}>
+        {Component}
+    </Suspense>;
 }
