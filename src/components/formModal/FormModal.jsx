@@ -5,6 +5,7 @@ import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {formatDate, generateForm, generateFormData, swalAlert} from "../../functions/tools";
 import {useMutation, useQueryClient} from "react-query";
+import PropTypes from 'prop-types';
 
 const FormModal = ({openModal,setOpenModal,model,schema,getItem,createItem,updateItem}) => {
     const [show, setShow] = useState(true);
@@ -111,3 +112,15 @@ const FormModal = ({openModal,setOpenModal,model,schema,getItem,createItem,updat
 }
 
 export default FormModal;
+
+FormModal.propTypes = {
+    openModal:PropTypes.object,
+    setOpenModal:PropTypes.func,
+
+    model: PropTypes.array,
+    schema: PropTypes.object,
+
+    getItem: PropTypes.func,
+    createItem: PropTypes.func,
+    updateItem: PropTypes.func
+}

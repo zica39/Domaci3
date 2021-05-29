@@ -1,6 +1,7 @@
 import{Modal,Button} from "react-bootstrap";
 import {Trash} from "react-bootstrap-icons";
 import {useState} from "react";
+import PropTypes from 'prop-types';
 
 const DeleteModal = ({id,removeRow,setDeleteId,title}) => {
     const [show, setShow] = useState(true);
@@ -24,7 +25,7 @@ const DeleteModal = ({id,removeRow,setDeleteId,title}) => {
                     <Button disabled={isDisabled} variant="secondary" onClick={handleClose}>
                         Cancel
                     </Button>
-                    <Button disabled={isDisabled} variant="danger" onClick={(e)=>{
+                    <Button disabled={isDisabled} variant="danger" onClick={()=>{
                         removeRow(id);
                         setIsDisabled(true);
                     }}>
@@ -37,3 +38,11 @@ const DeleteModal = ({id,removeRow,setDeleteId,title}) => {
 }
 
 export default DeleteModal;
+
+DeleteModal.propTypes = {
+    id: PropTypes.number,
+    title: PropTypes.string,
+
+    removeRow: PropTypes.func,
+    setDeleteId: PropTypes.func
+}

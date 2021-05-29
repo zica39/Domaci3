@@ -4,9 +4,12 @@ import GridButton from "../gridButton/GridButton";
 import PaginationComponent from "../paginationComponent/PaginationComponent";
 import SearchComponent from "../SearchComponent/SearchComponent";
 import PageSizeSelect from "../pageSizeSelect/PageSizeSelect";
+import PropTypes from 'prop-types';
 
-
-const Grid = ({onEditRow,onNewRow,onRowDelete,label,data,setPage,itemsCount,page,pageSize,setPageSize,filter,setFilter,loading}) => {
+const Grid = ({onEditRow,onNewRow,onRowDelete,label,
+                  data,setPage,itemsCount,
+                  page,pageSize,setPageSize,
+                  filter,setFilter,loading}) => {
 
     return <div className="bg-light shadow-sm">
 
@@ -23,3 +26,23 @@ const Grid = ({onEditRow,onNewRow,onRowDelete,label,data,setPage,itemsCount,page
 }
 
 export default Grid;
+
+Grid.propTypes = {
+    onEditRow: PropTypes.func,
+    onNewRow: PropTypes.func,
+    onRowDelete: PropTypes.func,
+
+    label: PropTypes.string,
+    data: PropTypes.array,
+    itemsCount: PropTypes.number,
+
+    page: PropTypes.number,
+    setPage: PropTypes.func,
+    pageSize: PropTypes.number,
+    setPageSize: PropTypes.func,
+
+    filter: PropTypes.string,
+    setFilter: PropTypes.func,
+
+    loading: PropTypes.bool
+}

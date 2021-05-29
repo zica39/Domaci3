@@ -1,5 +1,7 @@
 import {PlusCircle} from "react-bootstrap-icons";
 import React from "react";
+import PropTypes from 'prop-types';
+import {Button} from "../../stories/Button";
 
 const GridButton = ({label,onNewRow}) =>{
 
@@ -12,3 +14,13 @@ const GridButton = ({label,onNewRow}) =>{
 }
 
 export default GridButton;
+
+GridButton.propTypes = {
+    label: PropTypes.string,
+    onNewRow: PropTypes.func
+}
+
+GridButton.defaultProps = {
+    label: 'button',
+    onNewRow: undefined,
+};

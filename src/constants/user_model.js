@@ -26,7 +26,7 @@ const user_model = [
     },
 
     {
-        name: 'lang_key',
+        name: 'langKey',
         type: 'hidden',
         default: 'en'
     },

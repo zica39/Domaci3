@@ -1,7 +1,7 @@
 import React from 'react';
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav';
-import DropdownElement from "../Dropdown/Dropdown";
+import DropdownElement from "../DropdownElement/DropdownElement";
 import {Link, useRouteMatch} from 'react-router-dom';
 import {Person, Book, Film} from 'react-bootstrap-icons';
 import logo from './logo192.png';

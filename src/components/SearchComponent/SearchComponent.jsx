@@ -1,5 +1,6 @@
 import { Search } from 'react-bootstrap-icons';
 import React from "react";
+import PropTypes from 'prop-types';
 
 const SearchComponent = ({filter,setFilter}) => {
 
@@ -12,3 +13,8 @@ const SearchComponent = ({filter,setFilter}) => {
 }
 
 export default SearchComponent;
+
+SearchComponent.propTypes = {
+    filter:PropTypes.string,
+    setFilter: PropTypes.func
+}

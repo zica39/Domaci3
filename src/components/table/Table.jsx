@@ -3,12 +3,11 @@ import "./Table.css";
 import Table from 'react-bootstrap/Table'
 import {Trash,Pencil} from 'react-bootstrap-icons';
 import {camelPad, getHeaders} from "../../functions/tools";
+import PropTypes from 'prop-types';
 
 const TableComponent = ({ data, onEditRow,onRowDelete}) => {
-
     const header = getHeaders(data);
     const rows = data;
-
     return <Table striped bordered hover variant="dark">
         <thead>
                 <tr>
@@ -36,3 +35,9 @@ const TableComponent = ({ data, onEditRow,onRowDelete}) => {
 }
 
 export default TableComponent;
+
+TableComponent.propTypes = {
+    data: PropTypes.array,
+    onEditRow: PropTypes.func,
+    onRowDelete: PropTypes.func
+}

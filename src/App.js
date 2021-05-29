@@ -16,7 +16,7 @@ const Movies = LazyLoad('movies/Movies');
 
 function App() {
 
-    const queryClient = new QueryClient()
+    const queryClient = new QueryClient();
 
   return (
       <QueryClientProvider client={queryClient}>

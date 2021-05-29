@@ -11,7 +11,7 @@ import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 
 
-const Login = () => {
+const Login = ({storyBookMode}) => {
     const history = useHistory();
     const[disabled,setDisabled] = useState(false);
 
@@ -40,6 +40,11 @@ const Login = () => {
             saveToStorage('role','admin');
 
             history.push('/');
+
+            if(storyBookMode === true){
+                swalAlert('success', 'User has been successfully logged in!');
+                setDisabled(false);
+            }
 
         }).catch(function (error) {
             swalAlert('error', 'Error', error?.response?.data?.detail);
